@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bosshelt — Nieves & Helados Artesanales</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      color: #2C2C2A;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* FONDO: Via dei Fori Imperiali */
+    .page-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Via_dei_Fori_Imperiali_Roma_20160616.jpg/1280px-Via_dei_Fori_Imperiali_Roma_20160616.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+    .page-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(250, 230, 200, 0.80);
+      backdrop-filter: blur(1.5px);
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, rgba(250,199,117,0.93) 0%, rgba(240,153,123,0.96) 50%, rgba(216,90,48,0.97) 100%);
+      padding: 2.5rem 1.5rem 2.2rem;
+      text-align: center;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 8px 40px rgba(216,90,48,0.35);
+      overflow: hidden;
+    }
+    .hero-photos {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .hero-photo {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255,255,255,0.75);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+      transition: transform 0.3s;
+    }
+    .hero-photo:hover { transform: scale(1.08); }
+    .hero-icon { font-size: 2.8rem; margin-bottom: 0.2rem; }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 10px rgba(100,30,0,0.35);
+    }
+    .hero .tagline { font-size: 1.1rem; color: #fff3ea; margin-top: 0.4rem; font-weight: 600; }
+    .hero p { font-size: 0.95rem; color: rgba(255,255,255,0.88); margin-top: 0.4rem; }
+
+    /* GALERÍA STRIP */
+    .gallery-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #7A3A15;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+      padding: 0 2px;
+    }
+    .gallery-strip {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 0.4rem 0 1rem;
+      margin-bottom: 1.4rem;
+      scrollbar-width: thin;
+      scrollbar-color: #D85A30 #f0e8df;
+    }
+    .gallery-strip::-webkit-scrollbar { height: 5px; }
+    .gallery-strip::-webkit-scrollbar-track { background: #f0e8df; border-radius: 10px; }
+    .gallery-strip::-webkit-scrollbar-thumb { background: #D85A30; border-radius: 10px; }
+    .gallery-item {
+      flex-shrink: 0;
+      width: 190px;
+      height: 135px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+      position: relative;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s;
+    }
+    .gallery-item:hover img { transform: scale(1.07); }
+    .gallery-item .caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.68));
+      color: #fff;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 8px 10px 6px;
+    }
+
+    /* TABS */
+    .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .tab-btn {
+      padding: 8px 16px; border-radius: 20px;
+      border: 1px solid rgba(211,209,199,0.8);
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(6px);
+      color: #5F5E5A;
+      font-size: 14px; cursor: pointer;
+      transition: all 0.15s;
+      font-family: 'Nunito', sans-serif;
+      display: flex; align-items: center; gap: 6px;
+      font-weight: 600;
+    }
+    .tab-btn:hover { background: rgba(241,239,232,0.96); }
+    .tab-btn.active { background: #D85A30; color: #FAECE7; border-color: #D85A30; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* SABORES */
+    .flavor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 14px; }
+    .flavor-card {
+      background: rgba(255,255,255,0.93);
+      backdrop-filter: blur(8px);
+      border: 1px solid #E8E6DF;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .flavor-card:hover { transform: translateY(-5px); box-shadow: 0 10px 32px rgba(216,90,48,0.2); }
+    .flavor-card-img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+    }
+    .flavor-card-body { padding: 1rem; }
+    .flavor-icon { font-size: 2rem; margin-bottom: 5px; }
+    .flavor-name {
+      font-size: 15px; font-weight: 700; color: #2C2C2A;
+      font-family: 'Playfair Display', serif;
+    }
+    .flavor-desc { font-size: 12px; color: #888780; margin-top: 4px; line-height: 1.5; }
+    .flavor-origin {
+      margin-top: 9px;
+      background: #FAF0E8;
+      border-radius: 9px;
+      padding: 8px 10px;
+      font-size: 11.5px;
+      color: #7A3A15;
+      line-height: 1.55;
+    }
+    .flavor-origin strong {
+      color: #D85A30;
+      display: block;
+      margin-bottom: 3px;
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* HISTORIA */
+    .story-block {
+      background: rgba(255,255,255,0.90);
+      backdrop-filter: blur(8px);
+      border-radius: 16px;
+      padding: 1.4rem 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    }
+    .story-block h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px; font-weight: 700;
+      color: #D85A30; margin-bottom: 8px;
+    }
+    .story-block p { font-size: 14px; color: #5F5E5A; line-height: 1.75; }
+
+    /* PRECIOS */
+    .price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 12px; }
+    .price-card {
+      background: rgba(255,255,255,0.93);
+      backdrop-filter: blur(8px);
+      border: 1px solid #E8E6DF;
+      border-radius: 16px; padding: 1.3rem; text-align: center;
+      box-shadow: 0 2px 14px rgba(0,0,0,0.07);
+    }
+    .price-card.featured { border: 2px solid #D85A30; }
+    .price-label { font-size: 12px; color: #888780; text-transform: uppercase; letter-spacing: 0.5px; }
+    .price-amount {
+      font-size: 28px; font-weight: 700; color: #D85A30;
+      margin: 6px 0 4px;
+      font-family: 'Playfair Display', serif;
+    }
+    .price-detail { font-size: 13px; color: #888780; }
+    .badge { background: #FAECE7; color: #993C1D; font-size: 11px; padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 8px; }
+
+    /* INFO */
+    .info-card {
+      background: rgba(255,255,255,0.90);
+      backdrop-filter: blur(8px);
+      border: 1px solid #E8E6DF;
+      border-radius: 16px; padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem; display: flex; gap: 14px; align-items: flex-start;
+      box-shadow: 0 2px 14px rgba(0,0,0,0.06);
+    }
+    .info-icon { font-size: 22px; color: #D85A30; flex-shrink: 0; margin-top: 2px; }
+    .info-title { font-size: 15px; font-weight: 700; color: #2C2C2A; margin-bottom: 4px; }
+    .info-body { font-size: 14px; color: #5F5E5A; line-height: 1.6; }
+
+    .map-box {
+      background: rgba(241,239,232,0.92);
+      backdrop-filter: blur(8px);
+      border: 1px solid #E8E6DF;
+      border-radius: 16px; padding: 2rem; text-align: center;
+      margin-top: 0.5rem;
+    }
+    .map-box i { font-size: 2.5rem; color: #D85A30; display: block; margin-bottom: 10px; }
+    .map-box p { font-size: 14px; color: #5F5E5A; }
+    .map-link { display: inline-block; margin-top: 12px; color: #D85A30; font-size: 14px; font-weight: 600; text-decoration: none; }
+    .map-link:hover { text-decoration: underline; }
+
+    .note {
+      background: rgba(241,239,232,0.92);
+      backdrop-filter: blur(6px);
+      border-radius: 12px;
+      padding: 0.9rem 1rem; font-size: 13px; color: #5F5E5A;
+      margin-top: 1rem; display: flex; gap: 8px; align-items: flex-start;
+    }
+    .note i { color: #D85A30; font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    .contact-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #25D366; color: #fff;
+      border: none; border-radius: 12px;
+      padding: 12px 22px; font-size: 15px; font-weight: 600;
+      cursor: pointer; text-decoration: none; margin-top: 1rem;
+      font-family: 'Nunito', sans-serif;
+      box-shadow: 0 4px 14px rgba(37,211,102,0.35);
+    }
+    .contact-btn:hover { background: #1ebe5d; }
+    .call-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #D85A30; color: #FAECE7;
+      border: none; border-radius: 12px;
+      padding: 12px 22px; font-size: 15px; font-weight: 600;
+      cursor: pointer; text-decoration: none; margin-top: 1rem; margin-left: 10px;
+      font-family: 'Nunito', sans-serif;
+      box-shadow: 0 4px 14px rgba(216,90,48,0.35);
+    }
+    .call-btn:hover { background: #993C1D; }
+
+    footer {
+      text-align: center; padding: 1.5rem 1rem;
+      font-size: 13px; color: #8a7060;
+      background: rgba(255,255,255,0.55);
+      border-radius: 12px;
+      margin-top: 1rem;
+      backdrop-filter: blur(6px);
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-bg"></div>
+
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-photos">
+      <img class="hero-photo"
+        src="https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=200&h=200&fit=crop"
+        alt="Helados artesanales" />
+      <img class="hero-photo"
+        src="https://images.unsplash.com/photo-1570197788417-0e82375c9371?w=200&h=200&fit=crop"
+        alt="Paletas de frutas" />
+      <img class="hero-photo"
+        src="https://images.unsplash.com/photo-1488900128323-21503983a07e?w=200&h=200&fit=crop"
+        alt="Paleta colorida" />
+      <img class="hero-photo"
+        src="https://images.unsplash.com/photo-1516684732162-798a0062be99?w=200&h=200&fit=crop"
+        alt="Nieve artesanal" />
+    </div>
+    <div class="hero-icon">🍦</div>
+    <h1>Bosshelt</h1>
+    <div class="tagline">Nieves &amp; Helados Artesanales</div>
+    <p>Sabores que saben a México 🇲🇽 · San Andrés Cholula, Puebla</p>
+  </div>
+
+  <!-- GALERÍA DE PALETERÍAS Y PALETAS -->
+  <div class="gallery-label">🍡 Paleterías &amp; paletas artesanales</div>
+  <div class="gallery-strip">
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1488900128323-21503983a07e?w=380&h=270&fit=crop" alt="Paleta de frutas" />
+      <div class="caption">Paletas artesanales</div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=380&h=270&fit=crop" alt="Heladería colorida" />
+      <div class="caption">Colores de México</div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=380&h=270&fit=crop" alt="Helado de sabores" />
+      <div class="caption">Sabores únicos</div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1570197788417-0e82375c9371?w=380&h=270&fit=crop" alt="Paletas de colores" />
+      <div class="caption">Paletas de temporada</div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1516684732162-798a0062be99?w=380&h=270&fit=crop" alt="Nieve de barquillo" />
+      <div class="caption">Nieves de barquillo</div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1587314168485-3236d6710814?w=380&h=270&fit=crop" alt="Heladería típica" />
+      <div class="caption">Tradición mexicana</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('sabores', this)">
+      <i class="ti ti-ice-cream"></i> Sabores
+    </button>
+    <button class="tab-btn" onclick="showTab('historia', this)">
+      <i class="ti ti-heart"></i> Nuestra historia
+    </button>
+    <button class="tab-btn" onclick="showTab('precios', this)">
+      <i class="ti ti-tag"></i> Precios
+    </button>
+    <button class="tab-btn" onclick="showTab('ubicacion', this)">
+      <i class="ti ti-map-pin"></i> Ubicación
+    </button>
+    <button class="tab-btn" onclick="showTab('contacto', this)">
+      <i class="ti ti-phone"></i> Contacto
+    </button>
+  </div>
+
+  <!-- SABORES -->
+  <div id="tab-sabores" class="tab-panel active">
+    <div class="flavor-grid">
+
+      <div class="flavor-card">
+        <img class="flavor-card-img"
+          src="https://images.unsplash.com/photo-1601314167099-232775b3d6fd?w=400&h=260&fit=crop"
+          alt="Elote" />
+        <div class="flavor-card-body">
+          <div class="flavor-icon">🌽</div>
+          <div class="flavor-name">Elote</div>
+          <div class="flavor-desc">Cremoso con granos de maíz tierno y un toque dulce-salado</div>
+          <div class="flavor-origin">
+            <strong>🌱 Origen &amp; cultivo</strong>
+            El maíz nació en México hace más de 9,000 años en los valles de Oaxaca y Puebla. Se siembra en milpas familiares y se cosecha en verano-otoño. Nuestro elote viene de campos cholultecas: tierno, dulce y fresco.
+          </div>
+        </div>
+      </div>
+
+      <div class="flavor-card">
+        <img class="flavor-card-img"
+          src="https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=400&h=260&fit=crop"
+          alt="Aguacate" />
+        <div class="flavor-card-body">
+          <div class="flavor-icon">🥑</div>
+          <div class="flavor-name">Aguacate</div>
+          <div class="flavor-desc">Suave y natural, con la textura inigualable del aguacate mexicano</div>
+          <div class="flavor-origin">
+            <strong>🌱 Origen &amp; cultivo</strong>
+            Originario de México y Centroamérica, el aguacate crece en árboles que tardan hasta 10 años en madurar. Michoacán produce el 80% del aguacate mundial. Usamos variedades Hass de temporada, cremosas y sin fibra.
+          </div>
+        </div>
+      </div>
+
+      <div class="flavor-card">
+        <img class="flavor-card-img"
+          src="https://images.unsplash.com/photo-1589621316382-008455b857cd?w=400&h=260&fit=crop"
+          alt="Pepino con limón" />
+        <div class="flavor-card-body">
+          <div class="flavor-icon">🥒</div>
+          <div class="flavor-name">Pepino con limón</div>
+          <div class="flavor-desc">Refrescante, con toque cítrico y una pizca de chile piquín</div>
+          <div class="flavor-origin">
+            <strong>🌱 Origen &amp; cultivo</strong>
+            El pepino llegó de Asia y hoy se cultiva todo el año en Sonora, Sinaloa y Puebla. Lo combinamos con limón real de Veracruz y chile piquín seco del Bajío para ese sabor que solo existe en México.
+          </div>
+        </div>
+      </div>
+
+      <div class="flavor-card">
+        <img class="flavor-card-img"
+          src="https://images.unsplash.com/photo-1504309092620-4d0ec726efa4?w=400&h=260&fit=crop"
+          alt="Jamaica" />
+        <div class="flavor-card-body">
+          <div class="flavor-icon">🌺</div>
+          <div class="flavor-name">Jamaica</div>
+          <div class="flavor-desc">Floral y ligeramente ácida, perfecta para los días calurosos</div>
+          <div class="flavor-origin">
+            <strong>🌱 Origen &amp; cultivo</strong>
+            La flor de Jamaica (Hibiscus sabdariffa) vino de África y arraigó en Guerrero y Oaxaca. Los cálices se secan al sol en otoño. Infusionamos las flores frescas para una nieve de color rubí intenso y sabor inconfundible.
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="note">
+      <i class="ti ti-sparkles"></i>
+      Todos nuestros sabores son artesanales, preparados con ingredientes frescos y naturales. Sin colorantes artificiales, sin conservadores.
+    </div>
+  </div>
+
+  <!-- HISTORIA -->
+  <div id="tab-historia" class="tab-panel">
+    <div class="story-block">
+      <h3>Nuestros orígenes</h3>
+      <p>Bosshelt nació en el corazón de Cholula, una ciudad llena de historia y sabor. Todo comenzó con una receta familiar y el sueño de rescatar los sabores más auténticos de México, esos que te recuerdan a la infancia y a los mercados de tu abuela.</p>
+    </div>
+    <div class="story-block">
+      <h3>Cómo crecimos</h3>
+      <p>De un pequeño puesto en el tianguis local, pasamos a tener nuestro propio local en Cholula. Con el tiempo, la gente nos fue conociendo por nuestra calidad y por sabores que no encuentras en cualquier lado — elote, aguacate, pepino con limón, jamaica. Sabores de aquí, de México.</p>
+    </div>
+    <div class="story-block">
+      <h3>Nuestro compromiso</h3>
+      <p>Usamos ingredientes frescos y locales para crear helados y nieves artesanales. Sin colorantes artificiales, sin conservadores. Solo sabor real, como debe ser.</p>
+    </div>
+  </div>
+
+  <!-- PRECIOS -->
+  <div id="tab-precios" class="tab-panel">
+    <div class="price-grid">
+      <div class="price-card">
+        <div class="price-label">Bola sencilla</div>
+        <div class="price-amount">$30</div>
+        <div class="price-detail">Un sabor a elegir</div>
+      </div>
+      <div class="price-card featured">
+        <div class="badge">⭐ Más pedido</div>
+        <div class="price-label">Bola doble</div>
+        <div class="price-amount">$50</div>
+        <div class="price-detail">Dos sabores</div>
+      </div>
+      <div class="price-card">
+        <div class="price-label">Copa especial</div>
+        <div class="price-amount">$60</div>
+        <div class="price-detail">Tres sabores + toppings</div>
+      </div>
+      <div class="price-card">
+        <div class="price-label">Paleta artesanal</div>
+        <div class="price-amount">$35</div>
+        <div class="price-detail">Sabores del día</div>
+      </div>
+    </div>
+    <div class="note">
+      <i class="ti ti-info-circle"></i>
+      Precios en pesos mexicanos. Pueden variar por temporada. Consulta nuestras promociones.
+    </div>
+  </div>
+
+  <!-- UBICACIÓN -->
+  <div id="tab-ubicacion" class="tab-panel">
+    <div class="info-card">
+      <i class="ti ti-map-pin info-icon"></i>
+      <div>
+        <div class="info-title">Dirección</div>
+        <div class="info-body">San Andrés Cholula, Puebla, México<br>A unos pasos de la zona arqueológica</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <i class="ti ti-clock info-icon"></i>
+      <div>
+        <div class="info-title">Horarios</div>
+        <div class="info-body">Lunes a viernes: 12:00 – 20:00 hrs<br>Sábados y domingos: 11:00 – 21:00 hrs</div>
+      </div>
+    </div>
+    <div class="map-box">
+      <i class="ti ti-map"></i>
+      <p>San Andrés Cholula, Puebla</p>
+      <a class="map-link" href="https://maps.google.com/?q=San+Andres+Cholula+Puebla+Mexico" target="_blank">
+        Ver en Google Maps <i class="ti ti-external-link" style="font-size:13px;"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- CONTACTO -->
+  <div id="tab-contacto" class="tab-panel">
+    <div class="info-card">
+      <i class="ti ti-phone info-icon"></i>
+      <div>
+        <div class="info-title">Llámanos</div>
+        <div class="info-body">¿Quieres hacer un pedido especial o tienes alguna pregunta? ¡Con gusto te atendemos!</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <i class="ti ti-brand-whatsapp info-icon"></i>
+      <div>
+        <div class="info-title">WhatsApp</div>
+        <div class="info-body">Escríbenos para pedidos, eventos o preguntas. Respondemos rápido.</div>
+      </div>
+    </div>
+    <div class="note">
+      <i class="ti ti-info-circle"></i>
+      Reemplaza <strong>5512345678</strong> con tu número real en los botones de abajo.
+    </div>
+    <div style="margin-top: 0.5rem;">
+      <a class="contact-btn" href="https://wa.me/525512345678" target="_blank">
+        <i class="ti ti-brand-whatsapp"></i> WhatsApp
+      </a>
+      <a class="call-btn" href="tel:+525512345678">
+        <i class="ti ti-phone"></i> Llamar
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    🍦 Bosshelt · Nieves &amp; Helados Artesanales · Cholula, Puebla
+  </footer>
+
+</div>
+
+<script>
+  function showTab(id, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>
